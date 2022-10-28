@@ -35,5 +35,12 @@ val mainScreenTypography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 15.sp,
         color = Color.White
+    ),
+    h4 = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 15.sp,
+        color = Color.Gray,
+        lineHeight = 20.sp
     )
 )
