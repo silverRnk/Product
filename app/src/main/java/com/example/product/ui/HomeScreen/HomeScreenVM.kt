@@ -14,9 +14,9 @@ class HomeScreenVM(
     categories: Response<Categories>?
 ): ViewModel() {
 
-    val product = products?.body()
+    var product = products?.body()
 
-    val categories = categories?.body()
+    var categories = categories?.body()
 
     var searchBox by mutableStateOf("")
         private set
@@ -29,4 +29,13 @@ class HomeScreenVM(
 
         }
     }
+
+    fun getProduct(products: Response<Product>?){
+        this.product = products?.body()
+    }
+
+    fun getCategories(categories: Response<Categories>?){
+        this.categories = categories?.body()
+    }
+
 }
