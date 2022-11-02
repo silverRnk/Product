@@ -24,6 +24,7 @@ import com.example.product.model.Categories
 import com.example.product.model.Product
 import com.example.product.ui.theme.White1
 import com.example.product.ui.theme.mainScreenTypography
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 
 @Composable

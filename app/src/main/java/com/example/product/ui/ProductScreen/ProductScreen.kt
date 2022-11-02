@@ -1,4 +1,4 @@
-package com.example.product.ui.productScreen
+package com.example.product.ui.ProductScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.product.model.ProductItem
 import com.example.product.R
-import com.example.product.model.Rating
 
 @Composable
 fun productScreen(

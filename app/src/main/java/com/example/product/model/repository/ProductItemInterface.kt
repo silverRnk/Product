@@ -1,4 +1,4 @@
-package com.example.product.model
+package com.example.product.model.repository
 
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit

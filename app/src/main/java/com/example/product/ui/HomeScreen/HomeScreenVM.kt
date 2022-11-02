@@ -2,21 +2,38 @@ package com.example.product.ui.HomeScreen
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.product.model.Categories
 import com.example.product.model.Product
-import retrofit2.Response
+import com.example.product.model.repository.ProductApi
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeScreenVM(
-    products: Response<Product>?,
-    categories: Response<Categories>?
+@HiltViewModel
+class HomeScreenVM @Inject constructor(
+    productApi: ProductApi
 ): ViewModel() {
 
-    var product = products?.body()
+    var product = Product()
 
-    var categories = categories?.body()
+    var categories = Categories()
+
+    init {
+        viewModelScope.launch {
+            val productResponse = productApi.getProducts(5).body()
+            productResponse?.let {
+                product = it }
+
+            val categoriesResponse = productApi.getCategories().body()
+            categoriesResponse?.let {
+                categories = it
+            }
+
+        }
+    }
 
     var searchBox by mutableStateOf("")
         private set
@@ -29,13 +46,4 @@ class HomeScreenVM(
 
         }
     }
-
-    fun getProduct(products: Response<Product>?){
-        this.product = products?.body()
-    }
-
-    fun getCategories(categories: Response<Categories>?){
-        this.categories = categories?.body()
-    }
-
 }

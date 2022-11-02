@@ -1,5 +1,8 @@
-package com.example.product.model
+package com.example.product.model.repository
 
+import com.example.product.model.Categories
+import com.example.product.model.Product
+import com.example.product.model.ProductItem
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
