@@ -6,11 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.product.ui.HomeScreen.HomeScreen
-import com.example.product.ui.ProductItemScreen.productScreen
+import com.example.product.ui.ProductItemScreen.ProductItemScreen
+import com.example.product.ui.ProductScreen.ProductScreen
 import com.example.product.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,8 +33,17 @@ class MainActivity : ComponentActivity() {
                         HomeScreen(onNavigate = {
                             navController.navigate(it.route)
                         }) }
-                    composable(route = Routes.ProductItemScreen){
-                        productScreen()
+                    composable(route = Routes.ProductItemScreen + "?productId={productId}",
+                    arguments = listOf(
+                        navArgument(name = "productId"){
+                            type = NavType.IntType
+                            defaultValue = -1
+                        }
+                    )){
+                        ProductItemScreen()
+                    }
+                    composable(route = Routes.ProductScreen){
+                        ProductScreen()
                     }
 
             }

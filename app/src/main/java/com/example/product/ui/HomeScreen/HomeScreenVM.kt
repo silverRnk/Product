@@ -61,7 +61,11 @@ class HomeScreenVM @Inject constructor(
             }
             is HomeScreenEvent.OnProductItemSelected -> {
                 sendUiEvent(UiEvent.OnNavigate(Routes.ProductItemScreen
-                        + "?productId = ${event.productId}"))
+                        + "?productId=${event.productId}"))
+            }
+            is HomeScreenEvent.OnSelectCategory -> {
+                sendUiEvent(UiEvent.OnNavigate(Routes.ProductScreen
+                        + "?category=${event.category}"))
             }
 
         }
