@@ -66,6 +66,7 @@ class HomeScreenVM @Inject constructor(
             is HomeScreenEvent.OnSelectCategory -> {
                 sendUiEvent(UiEvent.OnNavigate(Routes.ProductScreen
                         + "?category=${event.category}"))
+                Log.d("TestTag", "Selected Category: " + event.category)
             }
 
         }

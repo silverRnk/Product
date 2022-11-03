@@ -16,6 +16,9 @@ interface ProductApi {
     @GET("products")
     suspend fun getProducts(@Query("limit") limit: Int): Response<Product>
 
+    @GET("products")
+    suspend fun getProducts(): Response<Product>
+
     @GET("products/categories")
     suspend fun getCategories(): Response<Categories>
 

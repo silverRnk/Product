@@ -11,8 +11,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.product.model.ProductItem
+import com.example.product.model.Rating
 import com.example.product.ui.HomeScreen.HomeScreen
 import com.example.product.ui.ProductItemScreen.ProductItemScreen
+import com.example.product.ui.ProductScreen.ProductItem
 import com.example.product.ui.ProductScreen.ProductScreen
 import com.example.product.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,8 +45,13 @@ class MainActivity : ComponentActivity() {
                     )){
                         ProductItemScreen()
                     }
-                    composable(route = Routes.ProductScreen){
-                        ProductScreen()
+                    composable(route = Routes.ProductScreen + "?category={category}",
+                    arguments = listOf(
+                        navArgument(name = "category"){
+                            type = NavType.StringType
+                            defaultValue = "" })
+                    ){
+                        ProductScreen(onNavigate = {navController.navigate(it.route)})
                     }
 
             }
@@ -64,5 +72,12 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
 
+    val item = ProductItem(
+        id = -1,
+        title = "Hello",
+        price = 0.00,
+        rating = Rating(count = -1, rate = 0.00)
+    )
+    ProductItem(productItem = item, OnEvent = {})
 
 }
