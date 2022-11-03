@@ -6,7 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.product.ui.theme.ProductTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.product.ui.HomeScreen.HomeScreen
+import com.example.product.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -17,8 +21,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ProductTheme {
+                val navController = rememberNavController()
 
+                NavHost(navController = navController,
+                    startDestination = Routes.HomeScreen){
+                    composable(route = Routes.HomeScreen){
+                        HomeScreen()
+
+                }
 
             }
         }

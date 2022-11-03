@@ -18,18 +18,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.product.R
 import com.example.product.model.Categories
 import com.example.product.model.Product
 import com.example.product.ui.theme.White1
 import com.example.product.ui.theme.mainScreenTypography
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeScreenVM
+    viewModel: HomeScreenVM = hiltViewModel()
 ){
 
 
@@ -144,7 +144,8 @@ fun Categories(
         Text(text = "Categories", style = mainScreenTypography.h2)
 
         categories?.let {
-            LazyRow(modifier = Modifier.wrapContentSize()
+            LazyRow(modifier = Modifier
+                .wrapContentSize()
                 .padding(top = 5.dp)){
                 items(it){ category ->
                     CategoryItem(item = category)
@@ -179,7 +180,5 @@ fun CategoryItem(
 
         }
     }
-
-
 
 }
