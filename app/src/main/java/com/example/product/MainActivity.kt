@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.product.ui.HomeScreen.HomeScreen
+import com.example.product.ui.ProductItemScreen.productScreen
 import com.example.product.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,9 +27,12 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController,
                     startDestination = Routes.HomeScreen){
                     composable(route = Routes.HomeScreen){
-                        HomeScreen()
-
-                }
+                        HomeScreen(onNavigate = {
+                            navController.navigate(it.route)
+                        }) }
+                    composable(route = Routes.ProductItemScreen){
+                        productScreen()
+                    }
 
             }
         }

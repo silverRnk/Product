@@ -1,26 +1,21 @@
-package com.example.product.ui.ProductScreen
+package com.example.product.ui.ProductItemScreen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
-import com.example.product.model.ProductItem
-import com.example.product.R
 
 @Composable
 fun productScreen(
-    product: ProductItem?,
 ){
+    Box(modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center){
+        Text(text = "Hello")
+    }
 
-    Column(modifier = Modifier
+
+    /*Column(modifier = Modifier
         .fillMaxSize()
         .padding(top = 10.dp)) {
 
@@ -79,6 +74,6 @@ fun productScreen(
 
 
 
-    }
+    }*/
 
 }

@@ -19,4 +19,7 @@ interface ProductApi {
     @GET("products/categories")
     suspend fun getCategories(): Response<Categories>
 
+    @GET("products/category/{category}")
+    suspend fun getProductByCategory(@Path("category") category: String): Response<Product>
+
 }

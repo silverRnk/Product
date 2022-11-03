@@ -9,7 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.product.model.Categories
 import com.example.product.model.Product
 import com.example.product.model.repository.ProductApi
+import com.example.product.util.Routes
+import com.example.product.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -47,12 +51,25 @@ class HomeScreenVM @Inject constructor(
     var searchBox by mutableStateOf("")
         private set
 
+    private val _uiEvent = Channel<UiEvent>()
+    var uiEvent = _uiEvent.receiveAsFlow()
+
     fun onEvent(event: HomeScreenEvent){
         when(event){
             is HomeScreenEvent.OnSearchValueChange -> {
                 searchBox = event.search
             }
+            is HomeScreenEvent.OnProductItemSelected -> {
+                sendUiEvent(UiEvent.OnNavigate(Routes.ProductItemScreen
+                        + "?productId = ${event.productId}"))
+            }
 
+        }
+    }
+
+    private fun sendUiEvent(uiEvent: UiEvent){
+        viewModelScope.launch {
+            _uiEvent.send(uiEvent)
         }
     }
 }

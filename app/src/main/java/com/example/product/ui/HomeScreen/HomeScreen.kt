@@ -2,6 +2,7 @@ package com.example.product.ui.HomeScreen
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -11,6 +12,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,12 +27,24 @@ import com.example.product.model.Categories
 import com.example.product.model.Product
 import com.example.product.ui.theme.White1
 import com.example.product.ui.theme.mainScreenTypography
+import com.example.product.util.UiEvent
 
 
 @Composable
 fun HomeScreen(
+    onNavigate: (UiEvent.OnNavigate) -> Unit,
     viewModel: HomeScreenVM = hiltViewModel()
 ){
+
+    LaunchedEffect(key1 = 1){
+        viewModel.uiEvent.collect { event ->
+            when(event){
+                is UiEvent.OnNavigate -> {onNavigate(event) }
+                else -> Unit
+            }
+
+        }
+    }
 
 
 
@@ -49,10 +63,9 @@ fun HomeScreen(
                 OnEvent = { viewModel.onEvent(it) })
         }
 
+        Deals(viewModel = viewModel)
 
-        Deals(product = viewModel.product)
-
-        Categories(categories = viewModel.categories)
+        Categories(viewModel = viewModel)
 
     }
 
@@ -82,17 +95,18 @@ fun SearchBox(
 
 @Composable
 fun Deals(
-    product: Product?
+    viewModel: HomeScreenVM,
 ){
+
+    val product = viewModel.product
 
     Column(horizontalAlignment = Alignment.Start) {
         Text(text = "Deals"
         , style =  mainScreenTypography.h2,
         modifier = Modifier.padding(bottom = 5.dp))
 
-        product?.let {
             LazyRow{
-                items(it){ item ->
+                items(product){ item ->
                     Box(modifier = Modifier
                         .padding(start = 10.dp)
                         .wrapContentSize()){
@@ -100,7 +114,13 @@ fun Deals(
                             modifier = Modifier
                                 .height(250.dp)
                                 .width(175.dp)
-                                .clip(RoundedCornerShape(15.dp)),
+                                .clip(RoundedCornerShape(15.dp))
+                                .clickable {
+                                    viewModel.onEvent(
+                                        HomeScreenEvent
+                                            .OnProductItemSelected(item.id)
+                                    )
+                                },
                             backgroundColor = White1){
                             Column(modifier = Modifier.fillMaxSize()) {
                                 Image(painter = rememberAsyncImagePainter(model = item.image)
@@ -125,10 +145,6 @@ fun Deals(
                     }
                 }
             }
-
-        }
-
-
     }
 }
 
@@ -136,39 +152,37 @@ fun Deals(
 
 @Composable
 fun Categories(
-    categories: Categories?
+    viewModel: HomeScreenVM
 ){
 
+    val categories = viewModel.categories
 
     Column(modifier = Modifier.padding(top = 10.dp)) {
         Text(text = "Categories", style = mainScreenTypography.h2)
 
-        categories?.let {
-            LazyRow(modifier = Modifier
-                .wrapContentSize()
-                .padding(top = 5.dp)){
-                items(it){ category ->
-                    CategoryItem(item = category)
-                }
+        LazyRow(modifier = Modifier
+            .wrapContentSize()
+            .padding(top = 5.dp)){
+            items(categories){ category ->
+                CategoryItem( onClick = {viewModel.onEvent(HomeScreenEvent.OnSelectCategory(category))},
+                    item = category)
             }
         }
-
     }
-
-
-    
-
 }
+
 
 
 @Composable
 fun CategoryItem(
+    onClick: () -> Unit,
     item: String,
 ){
     Box(modifier = Modifier.padding(start = 10.dp, end = 5.dp)){
         Card(modifier = Modifier
             .size(150.dp)
-            .clip(RoundedCornerShape(15.dp)),
+            .clip(RoundedCornerShape(15.dp))
+            .clickable { onClick() },
             backgroundColor = White1){
             Column(modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
