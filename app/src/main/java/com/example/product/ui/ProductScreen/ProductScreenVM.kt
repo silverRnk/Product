@@ -29,6 +29,8 @@ class ProductScreenVM @Inject constructor(
         private set
 
     init {
+
+
         var category = savedStateHandle.get<String?>("category")
 
         if(category != ""){
