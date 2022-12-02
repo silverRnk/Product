@@ -20,7 +20,7 @@ class FakeProductApi: ProductApi {
 
     override suspend fun getProducts(limit: Int): Response<Product> {
         var product = Product()
-        if (product.size >= limit){
+        if (product.size <= limit){
             product.clear()
             product.addAll(ProductObject.product.subList(0, limit).toTypedArray())
             return Response.success(product)

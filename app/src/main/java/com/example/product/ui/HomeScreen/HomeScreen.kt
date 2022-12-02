@@ -2,21 +2,21 @@ package com.example.product.ui.HomeScreen
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,11 +25,13 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.product.R
 import com.example.product.model.Categories
 import com.example.product.model.Product
+import com.example.product.model.ProductItem
 import com.example.product.ui.theme.White1
+import com.example.product.ui.theme.cardPlaceHolder
 import com.example.product.ui.theme.mainScreenTypography
 import com.example.product.util.UiEvent
 
-
+@ExperimentalMaterialApi
 @Composable
 fun HomeScreen(
     onNavigate: (UiEvent.OnNavigate) -> Unit,
@@ -93,6 +95,7 @@ fun SearchBox(
         modifier = Modifier)
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun Deals(
     viewModel: HomeScreenVM,
@@ -106,46 +109,125 @@ fun Deals(
         modifier = Modifier.padding(bottom = 5.dp))
 
             LazyRow{
-                items(product){ item ->
-                    Box(modifier = Modifier
-                        .padding(start = 10.dp)
-                        .wrapContentSize()){
-                        Card(
-                            modifier = Modifier
-                                .height(250.dp)
-                                .width(175.dp)
-                                .clip(RoundedCornerShape(15.dp))
-                                .clickable {
-                                    viewModel.onEvent(
-                                        HomeScreenEvent
-                                            .OnProductItemSelected(item.id)
-                                    )
-                                },
-                            backgroundColor = White1){
-                            Column(modifier = Modifier.fillMaxSize()) {
-                                Image(painter = rememberAsyncImagePainter(model = item.image)
-                                    , contentDescription = "product"
-                                    , modifier = Modifier
-                                        .fillMaxHeight(0.8f)
-                                        .fillMaxWidth())
 
-                                Row(verticalAlignment = Alignment.CenterVertically
-                                    ,horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 5.dp, vertical = 5.dp)) {
-                                    Text(text = item.title,
-                                        maxLines = 2,
-                                        modifier = Modifier.fillMaxWidth(0.6f))
-
-                                    Text(text = "$ ${item.price}")
-                                }
-                            }
-                        }
+                if(viewModel.product.isNullOrEmpty()){
+                    items(5){
+                        Spacer(modifier = Modifier.width(5.dp))
+                        productItemPlaceHolder()
+                    }
+                }else{
+                    items(product){ item ->
+                        Spacer(modifier = Modifier.width(5.dp))
+                        productItem(productItem = item,
+                            OnClick = {viewModel.onEvent(it)})
                     }
                 }
+                
+                item { 
+                    Spacer(modifier = Modifier.width(5.dp))
+                }
+
             }
     }
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun productItem(
+    productItem: ProductItem,
+    OnClick: (HomeScreenEvent) -> Unit
+){
+    Card(onClick = { OnClick(HomeScreenEvent.OnProductItemSelected(productItem.id))},
+    shape = RoundedCornerShape(15.dp),
+        backgroundColor = White1,
+        modifier = Modifier
+            .height(250.dp)
+            .width(175.dp)
+    ) {
+
+        Column(modifier = Modifier.fillMaxSize()) {
+            Image(painter = rememberAsyncImagePainter(model = productItem.image)
+                , contentDescription = "product"
+                , modifier = Modifier
+                    .fillMaxHeight(0.8f)
+                    .fillMaxWidth())
+
+            Row(verticalAlignment = Alignment.CenterVertically
+                ,horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()) {
+
+                Text(text = productItem.title,
+                    maxLines = 2,
+                    modifier = Modifier
+                        .fillMaxWidth(0.6f)
+                        .padding(start = 5.dp))
+
+            }
+
+            Text(text = "$ ${productItem.price}",
+            modifier = Modifier.padding(end = 5.dp))
+
+        }
+
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun productItemPlaceHolder(){
+
+
+    val brush = Brush.horizontalGradient(cardPlaceHolder)
+
+    val textFillerShape = RoundedCornerShape(15.dp)
+
+    Card(onClick = {},
+        shape = RoundedCornerShape(15.dp),
+        backgroundColor = White1,
+        modifier = Modifier
+            .height(250.dp)
+            .width(175.dp)) {
+
+        Column(Modifier.fillMaxSize()) {
+            Spacer(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.8f)
+                .background(brush))
+
+            Row(verticalAlignment = Alignment.CenterVertically
+                ,horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()) {
+                
+                
+                Column(modifier = Modifier.fillMaxWidth(0.6f)) {
+                    Spacer(modifier = Modifier.height(5.dp))
+
+                    Spacer(modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .height(10.dp)
+                        .clip(textFillerShape)
+                        .background(brush = brush, shape = textFillerShape))
+
+                    Spacer(modifier = Modifier.height(5.dp))
+
+                    Spacer(modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .height(10.dp)
+                        .clip(textFillerShape)
+                        .background(brush = brush, shape = textFillerShape))
+                }
+
+                Spacer(modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .height(10.dp)
+                    .clip(textFillerShape)
+                    .background(brush = brush, shape = textFillerShape))
+
+            }
+        }
+
+    }
+
 }
 
 
@@ -191,7 +273,6 @@ fun CategoryItem(
                     style = mainScreenTypography.h2,
                     textAlign = TextAlign.Center)
             }
-
         }
     }
 

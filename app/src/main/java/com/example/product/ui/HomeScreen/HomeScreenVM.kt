@@ -29,21 +29,23 @@ class HomeScreenVM @Inject constructor(
         private set
 
     init {
-        Log.d("TestTag", "Test")
-        Log.d("TestTag", productApi.toString())
+        //Log.d("TestTag", "Test")
+        //Log.d("TestTag", productApi.toString())
         viewModelScope.launch {
             val productResponse = productApi.getProducts(5).body()
-            Log.i("TestTag", productResponse.toString())
+            //Log.i("TestTag", productResponse.toString())
             productResponse?.let {
                 product = it
-            Log.i("TestTag", "Product" + product.toString())} }
+                //Log.i("TestTag", "Product" + product.toString())
+                }
+            }
 
         viewModelScope.launch {
             val categoriesResponse = productApi.getCategories().body()
-            Log.i("TestTag", categoriesResponse.toString())
+            //Log.i("TestTag", categoriesResponse.toString())
             categoriesResponse?.let {
                 categories = it
-                Log.i("TestTag", "Categories" + categories.toString())
+                //Log.i("TestTag", "Categories" + categories.toString())
             }
         }
     }
@@ -62,11 +64,12 @@ class HomeScreenVM @Inject constructor(
             is HomeScreenEvent.OnProductItemSelected -> {
                 sendUiEvent(UiEvent.OnNavigate(Routes.ProductItemScreen
                         + "?productId=${event.productId}"))
+                Log.d("TestTag", "Select id: ${event.productId}")
             }
             is HomeScreenEvent.OnSelectCategory -> {
                 sendUiEvent(UiEvent.OnNavigate(Routes.ProductScreen
                         + "?category=${event.category}"))
-                Log.d("TestTag", "Selected Category: " + event.category)
+                //Log.d("TestTag", "Selected Category: " + event.category)
             }
             is HomeScreenEvent.OnViewAllProducts -> {
                 sendUiEvent(UiEvent.OnNavigate(Routes.ProductScreen

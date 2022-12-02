@@ -2,6 +2,7 @@ package com.example.product.ui.ProductScreenTest
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import com.example.product.ProductObject
 import com.example.product.model.FakeProductApi
@@ -13,16 +14,15 @@ import com.example.product.util.Routes
 import com.example.product.util.Routes.ProductItemScreen
 import com.example.product.util.UiEvent
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class ProductScreenVMTest{
 
 
@@ -31,7 +31,7 @@ class ProductScreenVMTest{
 
     lateinit var viewModel: ProductScreenVM
 
-    private val mainSingleThread = newSingleThreadContext("VM Thread")
+    private val mainSingleThread = UnconfinedTestDispatcher()
 
     @Before
     fun setup(){
@@ -42,7 +42,7 @@ class ProductScreenVMTest{
     @After
     fun tearDown(){
         Dispatchers.resetMain()
-        mainSingleThread.close()
+        mainSingleThread.cancel()
     }
 
     @Test
@@ -90,7 +90,11 @@ class ProductScreenVMTest{
     }
 
     @Test
-    fun `OnProductItemSelect event`() = runTest{
+    fun `OnProductItemSelect event`() = runTest(UnconfinedTestDispatcher()){
+
+
+        val routeCollector = MutableStateFlow<UiEvent?>(null)
+
         val savedStateHandle = SavedStateHandle().apply {
             set("category", "")
         }
@@ -98,16 +102,12 @@ class ProductScreenVMTest{
 
         viewModel.onEvent(ProductScreenEvent.OnProductItemSelect(1))
 
-        var _uiEvent = MutableStateFlow<UiEvent?>(null)
-        val collect = launch(UnconfinedTestDispatcher()) {
-            viewModel.uiEvent.collect {
-                _uiEvent.value = it
-            }}
+        viewModel.uiEvent.collect{
+            routeCollector.value = it
+        }
 
 
-        assertThat(_uiEvent.value).isEqualTo(UiEvent.OnNavigate(""))
-
-        collect.cancel()
+        assertThat(routeCollector).isEqualTo(UiEvent.OnNavigate(""))
 
     }
 }

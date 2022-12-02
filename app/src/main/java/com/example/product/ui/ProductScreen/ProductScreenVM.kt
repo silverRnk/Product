@@ -37,13 +37,13 @@ class ProductScreenVM @Inject constructor(
             viewModelScope.launch {
                 val categoryResponse = productApi.getProductByCategory(category!!)
                 product = categoryResponse.body()
-                Log.d("TestTag", "1" + product.toString())
+                //Log.d("TestTag", "1" + product.toString())
             }
         }else{
             viewModelScope.launch {
                 val productResponse = productApi.getProducts()
                 product = productResponse.body()
-                Log.d("TestTag", "2" + product.toString())
+                //Log.d("TestTag", "2" + product.toString())
             }
 
 
