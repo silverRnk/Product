@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.product.model.Categories
 import com.example.product.model.Product
 import com.example.product.model.repository.ProductApi
+import com.example.product.util.CategoriesItem
 import com.example.product.util.Routes
 import com.example.product.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,8 +26,11 @@ class HomeScreenVM @Inject constructor(
     var product by mutableStateOf(Product())
         private set
 
-    var categories by mutableStateOf(Categories())
-        private set
+    val categories = listOf(
+        CategoriesItem.Electronics,
+        CategoriesItem.MensClothing,
+        CategoriesItem.WomensClothing,
+        CategoriesItem.Jewelry)
 
     init {
         //Log.d("TestTag", "Test")
@@ -40,15 +44,8 @@ class HomeScreenVM @Inject constructor(
                 }
             }
 
-        viewModelScope.launch {
-            val categoriesResponse = productApi.getCategories().body()
-            //Log.i("TestTag", categoriesResponse.toString())
-            categoriesResponse?.let {
-                categories = it
-                //Log.i("TestTag", "Categories" + categories.toString())
-            }
         }
-    }
+
 
     var searchBox by mutableStateOf("")
         private set

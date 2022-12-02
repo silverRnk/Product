@@ -5,4 +5,8 @@
     <string name="category3">Women\'s Clothing</string>
     <string name="category4">Jewelry</string>
 
+    <string name="navItem1">Home</string>
+    <string name="navItem2">Cart</string>
+    <string name="navItem3">User</string>
+
 </resources>

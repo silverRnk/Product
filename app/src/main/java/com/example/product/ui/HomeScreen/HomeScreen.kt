@@ -75,22 +75,10 @@ fun HomeScreen(
 
         Deals(viewModel = viewModel)
 
-        //@Todo move to view model
-        val categories = listOf<CategoriesItem>(
-            CategoriesItem.Electronics,
-            CategoriesItem.MensClothing,
-            CategoriesItem.WomensClothing,
-            CategoriesItem.Jewelry)
-
-        CategorySelection(categories = categories,
+        CategorySelection(categories = viewModel.categories,
             OnClick = {viewModel.onEvent(it)})
 
     }
-
-
-
-
-
 }
 
 
