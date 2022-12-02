@@ -1,11 +1,16 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.example.product.ui.HomeScreen
 
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -18,6 +23,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,8 +35,10 @@ import com.example.product.model.ProductItem
 import com.example.product.ui.theme.White1
 import com.example.product.ui.theme.cardPlaceHolder
 import com.example.product.ui.theme.mainScreenTypography
+import com.example.product.util.CategoriesItem
 import com.example.product.util.UiEvent
 
+@OptIn(ExperimentalComposeApi::class)
 @ExperimentalMaterialApi
 @Composable
 fun HomeScreen(
@@ -67,7 +75,15 @@ fun HomeScreen(
 
         Deals(viewModel = viewModel)
 
-        Categories(viewModel = viewModel)
+        //@Todo move to view model
+        val categories = listOf<CategoriesItem>(
+            CategoriesItem.Electronics,
+            CategoriesItem.MensClothing,
+            CategoriesItem.WomensClothing,
+            CategoriesItem.Jewelry)
+
+        CategorySelection(categories = categories,
+            OnClick = {viewModel.onEvent(it)})
 
     }
 
@@ -231,24 +247,23 @@ fun productItemPlaceHolder(){
 }
 
 
-
+@OptIn(ExperimentalFoundationApi::class)
+@ExperimentalComposeApi
 @Composable
-fun Categories(
-    viewModel: HomeScreenVM
+fun CategorySelection(
+    categories: List<CategoriesItem>,
+    OnClick: (HomeScreenEvent) -> Unit
 ){
 
-    val categories = viewModel.categories
 
     Column(modifier = Modifier.padding(top = 10.dp)) {
         Text(text = "Categories", style = mainScreenTypography.h2)
 
-        LazyRow(modifier = Modifier
-            .wrapContentSize()
-            .padding(top = 5.dp)){
-            items(categories){ category ->
-                CategoryItem( onClick = {viewModel.onEvent(HomeScreenEvent.OnSelectCategory(category))},
-                    item = category)
+        LazyVerticalGrid(cells = GridCells.Fixed(2)){
+            items(categories){ item ->
+                CategoryItem(onClick = { OnClick(it) }, categoryItem = item)
             }
+
         }
     }
 }
@@ -257,19 +272,23 @@ fun Categories(
 
 @Composable
 fun CategoryItem(
-    onClick: () -> Unit,
-    item: String,
+    onClick: (HomeScreenEvent) -> Unit,
+    categoryItem: CategoriesItem,
 ){
     Box(modifier = Modifier.padding(start = 10.dp, end = 5.dp)){
         Card(modifier = Modifier
             .size(150.dp)
             .clip(RoundedCornerShape(15.dp))
-            .clickable { onClick() },
+            .clickable { onClick(HomeScreenEvent.OnSelectCategory(categoryItem.categoryName)) },
             backgroundColor = White1){
             Column(modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center) {
-                Text(text = item,
+
+                Icon(painter = painterResource(id = categoryItem.iconId),
+                    contentDescription = categoryItem.categoryName)
+
+                Text(text = stringResource(id = categoryItem.headerId),
                     style = mainScreenTypography.h2,
                     textAlign = TextAlign.Center)
             }

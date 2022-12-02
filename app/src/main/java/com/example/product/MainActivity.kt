@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
                 val navController = rememberNavController()
 
+            //@Todo add navigation button bar
                 NavHost(navController = navController,
                     startDestination = Routes.HomeScreen){
                     composable(route = Routes.HomeScreen){

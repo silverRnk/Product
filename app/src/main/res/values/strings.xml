@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Product</string>
+    <string name="category1">Electronics</string>
+    <string name="category2">Men\'s Clothing</string>
+    <string name="category3">Women\'s Clothing</string>
+    <string name="category4">Jewelry</string>
+
 </resources>
